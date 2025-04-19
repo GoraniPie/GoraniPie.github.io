@@ -279,6 +279,7 @@ void update_tech_catalog(string &s) {
             tech_catalog += "<li><a href=\"#\" onclick=\"load_post('";
             tech_catalog +=  file_name + "', '" + tag;
             tech_catalog += "')\">" + title;
+            tech_catalog += "</a></li>\n";
         }
     }
     s.insert(tech_idx_start + 24, tech_catalog);
