@@ -1,0 +1,6 @@
+@file_name: text test
+@title: テキストテスト
+@date: 20250419
+@tags: 作文
+
+本文です。作文内容を書きます。
