@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[25_04_19]WindowsC++のシステムコール＆エンコーディング問題</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica", "Yu Gothic", sans-serif;
+      background-color: #f6f5f1;
+      color: #333;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    nav {
+      width: 200px;
+      padding: 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin-bottom: 1rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #444;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      color: #000;
+    }
+
+    .toggle-menu > input[type="checkbox"] {
+        display: none;
+    }
+
+    .toggle-menu > label {
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    }
+
+    .toggle-menu > ul {
+    display: none;
+    margin-left: 1rem;
+    border-left: 2px solid #ccc;
+    padding-left: 0.5rem;
+    }
+
+    .toggle-menu > input[type="checkbox"]:checked ~ ul {
+    display: block;
+    }
+
+    .toggle-menu ul li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    }
+
+    main {
+      flex-grow: 1;
+      background-color: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      border-radius: 8px;
+    }
+
+    article h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    article small {
+      display: block;
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+
+    article p {
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    pre {
+      font-family: 'Helvetica', 'Yu Gothic', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <main>
+      <article>
+        <h1>[25_04_19]WindowsC++のシステムコール＆エンコーディング問題</h1>
+        <small>2025-04-19 | 技術</small>
+
+        <p><br><br>何日ぐらいかかり、今日でGithub.io用のブログの大筋を完成させた。<br><br>この静的ブログを作るのに最も大変だったのは、日本語のディレクトリの処理だった。<br><br>もともとは、ファイル名を日本語でするつもりだった。でも、なぜかデバッグしてみても原因が把握できなかった。<br><br>変数の内容を見ればロジックの問題はなさそうだったが、ofstreamのコードがエラーを吐いた。<br><br><br>問題のコード：<br><pre><br>ofstream f(new_title);<br>if (f.is_open()) {<br>    f << new_post;<br>    f.close();<br>} else { cout << "[ofstream] ディレクトリのアクセス不可能\n"; }<br></pre><br><br>ここで f.is_open()を通過せずエラーになっていた。<br><br>ここで考えてた可能性は一つしかないはずだと確信していた。<br><br>ディレクトリ(=new_title)の設計のミス。これしかないって。<br><br>だが、何回も修正したり、確認したり、デバッグしたりしても問題はいたちごっこ...<br><br>熱心にグーグルで探してみたさきに、いよいよ原因を理解した。<br><br>Windows 10のg++でコンパイルしていたが、どうやらWindows環境のC++の複雑なエンコーディングが問題だったらしい。<br><br>ostreamでファイルの生成をしたら、内部的にはシステムコールするようになる。<br><br>そのシステムコールのファンクションで、CreateFileA()が使われるが、<br><br>このファンクションはWindowsの環境ではANSIエンコーディングのみが認識できるので<br><br>UTF-8の日本語を使うとシステムコール失敗になる。<br><br>Linux環境では大丈夫らしいけど、Windowsなら一応英語のディレクトリを設定した方がよさそうだ...<br><br>俺もタイトルとファイル名を別々にして解決した。</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>

@@ -33,7 +33,7 @@
 
 ```
 2. 原文の**変更・追加・削除**の時、ターミナルで`parser.cpp`を起動します。<br>
-`g++ -std=c++17 -o parser parser.cpp ./parser`<br>
+`g++ -std=c++17 -o parser parser.cpp`<br>
 `parser.exe`
 3. `parser.cpp`の起動の後、`./index.html`と`./post```が更新されます。
 原文のファイルと`post_template.html`を合わせたHTMLフォーマットのファイルが`./post`に生成されます。

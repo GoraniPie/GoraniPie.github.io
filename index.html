@@ -137,13 +137,20 @@
     }
   </style>
   <script>
-    function load_post(filename) {
-      fetch(`./post/writting/${filename}.html`)
+    function load_post(filename, tag) {
+
+      var type = "writting";
+      if (tag == "" || tag == "作文") type = "writting";
+      else if (tag == "技術") type = "tech";
+      else type = "writting";
+
+      fetch(`./post/${type}/${filename}.html`)
         .then(res => res.text())
         .then(data => {
           document.getElementById("post_content").innerHTML = data;
           document.getElementById("popup").style.display = "block";
         });
+      
     }
     
     function close_popup() {
@@ -170,13 +177,18 @@
                       <label for="作文-toggle">・作文</label>
                       <ul>
                         <!--writting_auto_add_start-->
-                        <li><a href="#" onclick="load_post('text test')">テキストテスト</a></li>
-  <li><a href="#" onclick="load_post('hello_world_test')">hello_world</a></li>
-  <!--writting_auto_add_end-->
+                      <!--writting_auto_add_end-->
                       </ul>
                     </div>
-                <li><a href="#">・ニュース</a></li>
-                <li><a href="#">・技術</a></li>
+                    <div class="toggle-menu">
+                      <input type="checkbox" id="技術-toggle" />
+                      <label for="技術-toggle">・技術</label>
+                        <ul>
+                          <!--tech_auto_add_start-->
+                       <li><a href="#" onclick="load_post('[25_04_19]WindowsCppEncoding', '技術')">[25_04_19]WindowsC++のシステムコール＆エンコーディング問題<!--tech_auto_add_end-->
+                        </ul>
+                    </div>
+                <li><a href="#">・ニュース</a></li> 
               </ul>
 
               <div id="popup" style="display:none; position:fixed; top:5%; left:10%; width:80%; height:80%; overflow:auto; background:#f6f5f1; border:1px solid #aaa; padding:1rem; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:9999;">

@@ -40,6 +40,10 @@ string find_title(string const &s);
 string find_date(string const &s);
 string find_tag(string const &s);
 string find_body(string const &s);
+string txtformat_to_htmlformat(string s);
+string update_catalog(string s);
+void update_writting_catalog(string &s);
+void update_tech_catalog(string &s);
 bool sort_recent(post a, post b);
 
 // グローバル変数
@@ -81,8 +85,13 @@ int main() {
 
     // post/writting 新データ装入
     for (int i = 0; i < posts.size(); i++) {
-        const string new_title = "./post/writting/" + posts[i].get_file_name() + ".html";
         string new_post = create_post(posts[i], tmplt);
+        string new_title;
+        if (posts[i].get_tags() == "作文") {
+            new_title = "./post/writting/" + posts[i].get_file_name() + ".html";
+        } else if (posts[i].get_tags() == "技術") {
+            new_title = "./post/tech/" + posts[i].get_file_name() + ".html";
+        }
 
         ofstream f(new_title);
 
@@ -104,22 +113,7 @@ int main() {
     // 最新投稿が最上段へ
     sort(posts.begin(), posts.end(), sort_recent);
 
-    int writting_idx_start = new_blog.find("<!--writting_auto_add_start-->") + 29;
-    int writting_idx_end = new_blog.find("<!--writting_auto_add_end-->");
-
-    // 既存データ削除
-    new_blog.erase(writting_idx_start + 24, writting_idx_end - writting_idx_start - 24);
-
-    // データ更新をブログに反映
-    string added_catalog;
-    for (int i = 0; i < posts.size(); i++) {
-        string title = posts[i].get_title();
-        string file_name = posts[i].get_file_name();
-        added_catalog += "<li><a href=\"#\" onclick=\"load_post('";
-        added_catalog +=  file_name + "')\">" + title;
-        added_catalog += "</a></li>\n";
-    }
-    new_blog.insert(writting_idx_start + 24, added_catalog);
+    new_blog = update_catalog(new_blog);
 
     ofstream update("index.html", iostream::trunc);
     if (update.is_open()) {
@@ -160,7 +154,10 @@ string create_post(post &mypost, string tmplt) {
 
     tmplt.replace(tmplt.find("{{date}}"), 8, date);
     tmplt.replace(tmplt.find("{{tags}}"), 8, mypost.get_tags());
-    tmplt.replace(tmplt.find("{{body}}"), 8, mypost.get_body());
+
+    string body = txtformat_to_htmlformat(mypost.get_body());
+    tmplt.replace(tmplt.find("{{body}}"), 8, body);
+    
     return tmplt;
 }
 
@@ -216,4 +213,64 @@ string find_body(string const &s) {
 
 bool sort_recent(post a, post b) {
     return stoi(a.get_date()) > stoi(b.get_date());
+}
+
+string txtformat_to_htmlformat(string s) {
+    // \n -> <br>
+    size_t pos = 0;
+    while ((pos = s.find('\n', pos)) != std::string::npos) {
+        s.replace(pos, 1, "<br>");
+        pos += 4;
+    }
+    return s;
+}
+
+string update_catalog(string new_blog) {
+    update_writting_catalog(new_blog);
+    update_tech_catalog(new_blog);
+    return new_blog;
+}
+
+void update_writting_catalog(string &s) {
+    int writting_idx_start = s.find("<!--writting_auto_add_start-->") + 29;
+    int writting_idx_end = s.find("<!--writting_auto_add_end-->");
+
+    // 既存データ削除
+    s.erase(writting_idx_start + 24, writting_idx_end - writting_idx_start - 24);
+
+    // データ更新をブログに反映
+    string writting_catalog;
+    for (int i = 0; i < posts.size(); i++) {
+        if (posts[i].get_tags() == "作文") {
+            string title = posts[i].get_title();
+            string file_name = posts[i].get_file_name();
+            writting_catalog += "<li><a href=\"#\" onclick=\"load_post('";
+            writting_catalog +=  file_name + "', '" + posts[i].get_tags();
+            writting_catalog += "')\">" + title;
+            writting_catalog += "</a></li>\n";
+        }
+    }
+    s.insert(writting_idx_start + 24, writting_catalog);
+}
+
+void update_tech_catalog(string &s) {
+    int tech_idx_start = s.find("<!--tech_auto_add_start-->") + 26;
+    int tech_idx_end = s.find("<!--tech_auto_add_end-->");
+
+    // 既存データ削除
+    s.erase(tech_idx_start + 24, tech_idx_end - tech_idx_start - 24);
+
+    // データ更新をブログに反映
+    string tech_catalog;
+    for (int i = 0; i < posts.size(); i++) {
+        if (posts[i].get_tags() == "技術") {
+            string title = posts[i].get_title();
+            string file_name = posts[i].get_file_name();
+            string tag = posts[i].get_tags();
+            tech_catalog += "<li><a href=\"#\" onclick=\"load_post('";
+            tech_catalog +=  file_name + "', '" + tag;
+            tech_catalog += "')\">" + title;
+        }
+    }
+    s.insert(tech_idx_start + 24, tech_catalog);
 }
