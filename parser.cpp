@@ -55,8 +55,17 @@ int main() {
     cout.tie(NULL);
     ios::sync_with_stdio(false);
 
-    // writtingフォルダーを巡って分析
+    // フォルダーを巡って分析
     for (auto& i : filesystem::directory_iterator("./original/writting")) {
+        if (i.is_regular_file()) {
+            ifstream f(i.path());
+            if (f.is_open()) {
+                analyze_file(f);
+                f.close();
+            }
+        }
+    }
+    for (auto& i : filesystem::directory_iterator("./original/tech")) {
         if (i.is_regular_file()) {
             ifstream f(i.path());
             if (f.is_open()) {
