@@ -5,6 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Goranipieの空間</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      html {
+        font-size: 14px;
+      }
+
+      .container {
+        flex-direction: column;
+        padding: 0 0.5rem;
+      }
+    
+      nav {
+        width: 100%;
+        padding: 0.5rem;
+      }
+    
+      main {
+        width: 100%;
+        margin: 1rem 0;
+        padding: 0.5rem;
+      }
+    
+      header {
+        font-size: 1.2rem;
+        padding: 1rem 0;
+      }
+    
+      .toggle-menu > label {
+        font-size: 0.9rem;
+      }
+    
+      footer {
+        font-size: 0.75rem;
+      }
+    }
+    
+
     body {
       margin: 0;
       font-family: "Helvetica", "Yu Gothic", sans-serif;
@@ -24,13 +68,6 @@
     header a {
         text-decoration: none;
         color: black;
-    }
-
-    .container {
-      display: flex;
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 1rem;
     }
 
     nav {
@@ -86,7 +123,7 @@
 
     main {
       flex-grow: 1;
-      padding: 2rem;
+      padding: 0.8rem;
       background-color: #ffffff;
       box-shadow: 0 0 8px rgba(0,0,0,0.05);
       border-radius: 8px;
@@ -123,9 +160,13 @@
     
     .container {
       display: flex;
-      flex-grow: 1;     /* ← 핵심: 남은 높이 모두 사용 */
-      width: 100%;      /* ← 가로 최대 사용 */
+      flex-grow: 1;
+      width: 100%;
+      max-width: 1400px;
+      min-width: 90%;
+      margin: 2rem auto;
       padding: 0 1rem;
+      box-sizing: border-box;
     }
     
     footer {
@@ -193,10 +234,7 @@
                 <li><a href="#">・ニュース</a></li> 
               </ul>
 
-              <div id="popup" style="display:none; position:fixed; top:5%; left:10%; width:80%; height:80%; overflow:auto; background:#f6f5f1; border:1px solid #aaa; padding:1rem; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:9999;">
-                <button onclick="close_popup()">閉じる</button>
-                <div id="post_content"></div>
-              </div>
+              
 
             </li>
           </ul>
@@ -204,13 +242,20 @@
 
       <main>
         <h1>ようこそ！</h1>
-        <p>このブログは個人学習の記録空間です。</p>
+        <p>このブログは個人学習の記録空間です。主に日本語で思考・表現を練習します。</p>
       </main>
     </div>
+    
     <footer style="text-align: center; padding: 1rem 0; font-size: 0.9rem; color: #666;">
       Email : intelpieservice@gmail.com<br>
       Powered by <a href="https://github.com/GoraniPie/GoraniPie.github.io" target="_blank">GoraniPie</a>
     </footer>
   </div>
+
+  <div id="popup" style="display:none; position:fixed; top:5%; left:50%; transform:translateX(-50%); width:85%; height:80%; overflow:auto; background:#f6f5f1; border:1px solid #aaa; padding:1rem; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:9999;">
+    <button onclick="close_popup()">閉じる</button>
+    <div id="post_content"></div>
+  </div>
+
 </body>
 </html>
