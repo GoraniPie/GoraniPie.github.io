@@ -2,58 +2,34 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   <title>Goranipieの空間</title>
   <style>
     * {
       box-sizing: border-box;
     }
 
-    html {
-      font-size: 16px;
-    }
-    
-    @media (max-width: 768px) {
-      html {
-        font-size: 14px;
-      }
-
-      .container {
-        flex-direction: column;
-        padding: 0 0.5rem;
-      }
-    
-      nav {
-        width: 100%;
-        padding: 0.5rem;
-      }
-    
-      main {
-        width: 100%;
-        margin: 1rem 0;
-        padding: 0.5rem;
-      }
-    
-      header {
-        font-size: 1.2rem;
-        padding: 1rem 0;
-      }
-    
-      .toggle-menu > label {
-        font-size: 0.9rem;
-      }
-    
-      footer {
-        font-size: 0.75rem;
-      }
-    }
-    
-
-    body {
+    html, body {
+      scrollbar-gutter: stable both-edges;
       margin: 0;
+      padding: 0;
       font-family: "Helvetica", "Yu Gothic", sans-serif;
       background-color: #f6f5f1;
       color: #333;
+      height: 100%;
+    }
+
+    .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    .page-wrapper.modal-open {
+      height: 100vh;
+      overflow: hidden;
     }
 
     header {
@@ -66,22 +42,41 @@
     }
 
     header a {
-        text-decoration: none;
-        color: black;
+      text-decoration: none;
+      color: black;
+    }
+
+    .main-wrapper {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      gap: 1rem;
+      flex-wrap: nowrap;
+      align-items: stretch;
     }
 
     nav {
-      width: 250px;
+      width: 270px;
+      flex: 0 0 270px;
       padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
     }
 
     nav ul {
       list-style: none;
       padding: 0;
+      margin: 0;
+      width: 100%;
     }
 
     nav ul li {
       margin-bottom: 1rem;
+      width: 100%;
     }
 
     nav ul li a {
@@ -95,80 +90,46 @@
     }
 
     .toggle-menu > input[type="checkbox"] {
-        display: none;
+      display: none;
     }
 
     .toggle-menu > label {
-    cursor: pointer;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 0.5rem;
-    }
-
-    .toggle-menu > ul {
-    display: none;
-    margin-left: 1rem;
-    border-left: 2px solid #ccc;
-    padding-left: 0.5rem;
-    }
-
-    .toggle-menu > input[type="checkbox"]:checked ~ ul {
-    display: block;
-    }
-
-    .toggle-menu ul li {
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    }
-
-    main {
-      flex-grow: 1;
-      padding: 0.8rem;
-      background-color: #ffffff;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-      border-radius: 8px;
-      margin: 2rem 0;
-    }
-
-    article h1 {
-      font-size: 1.4rem;
+      cursor: pointer;
+      font-weight: bold;
+      display: block;
       margin-bottom: 0.5rem;
     }
 
-    article small {
+    .toggle-menu > ul {
+      display: none;
+      margin-left: 1rem;
+      border-left: 2px solid #ccc;
+      padding-left: 0.5rem;
+    }
+
+    .toggle-menu > input[type="checkbox"]:checked ~ ul {
       display: block;
-      margin-bottom: 1.5rem;
-      color: #666;
     }
 
-    article p {
-      line-height: 1.6;
-      margin-bottom: 1.2rem;
+    .toggle-menu ul li {
+      padding-right: 1rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
     }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
+    .toggle-menu ul li a {
+      font-size: 0.8rem;
     }
-    
-    .wrapper {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 1rem;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
     }
-    
-    .container {
-      display: flex;
-      flex-grow: 1;
-      width: 100%;
-      max-width: 1400px;
-      min-width: 90%;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      box-sizing: border-box;
-    }
-    
+
     footer {
       text-align: center;
       padding: 1rem 0;
@@ -176,86 +137,131 @@
       color: #666;
       background-color: #f6f5f1;
     }
+
+    /* モーダル関連 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      display: none;
+      z-index: 9998;
+    }
+
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 1400px;
+      max-height: 90vh;
+      background: #f6f5f1;
+      padding: 1rem;
+      overflow: auto;
+      display: none;
+      z-index: 9999;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      border-radius: 6px;
+    }
+
+    .modal button {
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-wrapper {
+        display: block;
+        width: 100%;
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+    
+      nav {
+        width: 100% !important;
+        box-sizing: border-box;
+      }
+    
+      main {
+        width: 100%;
+        margin-top: 1rem;
+      }
+    }
   </style>
   <script>
     function load_post(filename, tag) {
-
-      var type = "writting";
-      if (tag == "" || tag == "作文") type = "writting";
-      else if (tag == "技術") type = "tech";
-      else type = "writting";
+      const type = tag === "技術" ? "tech" : "writting";
 
       fetch(`./post/${type}/${filename}.html`)
         .then(res => res.text())
         .then(data => {
           document.getElementById("post_content").innerHTML = data;
-          document.getElementById("popup").style.display = "block";
+          document.querySelector(".modal").style.display = "block";
+          document.querySelector(".modal-overlay").style.display = "block";
+          document.querySelector(".page-wrapper").classList.add("modal-open");
         });
-      
     }
-    
-    function close_popup() {
-      document.getElementById("popup").style.display = "none";
-      document.getElementById("post_content").innerHTML = "";
-    }
-    </script>
-</head>
 
+    function close_popup() {
+      document.querySelector(".modal").style.display = "none";
+      document.querySelector(".modal-overlay").style.display = "none";
+      document.getElementById("post_content").innerHTML = "";
+      document.querySelector(".page-wrapper").classList.remove("modal-open");
+    }
+  </script>
+</head>
 <body>
-  <div class="wrapper">
+  <div class="page-wrapper">
     <header>
       <a href="./index.html">Goranipieの空間</a>
     </header>
 
-    <div class="container">
+    <div class="main-wrapper">
       <nav>
-          <ul>
-            <li>
-              <strong>日本語学習</strong>
-              <ul style="margin-left: 0.5rem;">
-                  <div class="toggle-menu">
-                      <input type="checkbox" id="作文-toggle" />
-                      <label for="作文-toggle">・作文</label>
-                      <ul>
-                        <!--writting_auto_add_start-->
-                      <li><a href="#" onclick="load_post('[25_04_25]RedefinitionOfKAIZEN', '作文')">[25_04_25]「改善」の再定義</a></li>
+        <ul>
+          <li><strong>日本語学習</strong>
+            <ul style="margin-left: 0.5rem;">
+              <div class="toggle-menu">
+                <input type="checkbox" id="作文-toggle" />
+                <label for="作文-toggle">・作文</label>
+                <ul>
+                  <!--writting_auto_add_start-->
+                  <li><li><a href="#" onclick="load_post('[25_04_25]RedefinitionOfKAIZEN', '作文')">[25_04_25]「改善」の再定義</a></li>
 <!--writting_auto_add_end-->
-                      </ul>
-                    </div>
-                    <div class="toggle-menu">
-                      <input type="checkbox" id="技術-toggle" />
-                      <label for="技術-toggle">・技術</label>
-                        <ul>
-                          <!--tech_auto_add_start-->
-                       <li><a href="#" onclick="load_post('[25_04_19]WindowsCppEncoding', '技術')">[25_04_19]WindowsC++のシステムコール＆エンコーディング問題</a></li>
+                </ul>
+              </div>
+              <div class="toggle-menu">
+                <input type="checkbox" id="技術-toggle" />
+                <label for="技術-toggle">・技術</label>
+                <ul>
+                  <!--tech_auto_add_start-->
+                  <li><<li><a href="#" onclick="load_post('[25_04_19]WindowsCppEncoding', '技術')">[25_04_19]WindowsC++のシステムコール＆エンコーディング問題</a></li>
 <!--tech_auto_add_end-->
-                        </ul>
-                    </div>
-                <li><a href="#">・ニュース</a></li> 
-              </ul>
-
-              
-
-            </li>
-          </ul>
-        </nav>
+                </ul>
+              </div>
+              <li><a href="#">・ニュース</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
 
       <main>
         <h1>ようこそ！</h1>
         <p>このブログは個人学習の記録空間です。主に日本語で思考・表現を練習します。</p>
       </main>
     </div>
-    
-    <footer style="text-align: center; padding: 1rem 0; font-size: 0.9rem; color: #666;">
+
+    <footer>
       Email : intelpieservice@gmail.com<br>
       Powered by <a href="https://github.com/GoraniPie/GoraniPie.github.io" target="_blank">GoraniPie</a>
     </footer>
   </div>
 
-  <div id="popup" style="display:none; position:fixed; top:5%; left:50%; transform:translateX(-50%); width:85%; height:80%; overflow:auto; background:#f6f5f1; border:1px solid #aaa; padding:1rem; box-shadow:0 0 10px rgba(0,0,0,0.3); z-index:9999;">
+  <!-- モーダル本体 -->
+  <div class="modal-overlay" onclick="close_popup()"></div>
+  <div class="modal" id="popup">
     <button onclick="close_popup()">閉じる</button>
     <div id="post_content"></div>
   </div>
-
 </body>
 </html>
