@@ -241,11 +241,11 @@ string update_catalog(string new_blog) {
 }
 
 void update_writting_catalog(string &s) {
-    int writting_idx_start = s.find("<!--writting_auto_add_start-->") + 29;
+    int writting_idx_start = s.find("<!--writting_auto_add_start-->") + 30;
     int writting_idx_end = s.find("<!--writting_auto_add_end-->");
 
     // 既存データ削除
-    s.erase(writting_idx_start + 24, writting_idx_end - writting_idx_start - 24);
+    s.erase(writting_idx_start, writting_idx_end - writting_idx_start);
 
     // データ更新をブログに反映
     string writting_catalog;
@@ -259,7 +259,7 @@ void update_writting_catalog(string &s) {
             writting_catalog += "</a></li>\n";
         }
     }
-    s.insert(writting_idx_start + 24, writting_catalog);
+    s.insert(writting_idx_start, writting_catalog);
 }
 
 void update_tech_catalog(string &s) {
@@ -267,7 +267,7 @@ void update_tech_catalog(string &s) {
     int tech_idx_end = s.find("<!--tech_auto_add_end-->");
 
     // 既存データ削除
-    s.erase(tech_idx_start + 24, tech_idx_end - tech_idx_start - 24);
+    s.erase(tech_idx_start, tech_idx_end - tech_idx_start);
 
     // データ更新をブログに反映
     string tech_catalog;
@@ -282,5 +282,5 @@ void update_tech_catalog(string &s) {
             tech_catalog += "</a></li>\n";
         }
     }
-    s.insert(tech_idx_start + 24, tech_catalog);
+    s.insert(tech_idx_start, tech_catalog);
 }
