@@ -8,9 +8,15 @@
 
 using namespace std;
 
+enum tag {
+    作文,
+    技術,
+    ニュース
+};
+
 class post {
     public:
-    post(string a, string b, string c, string d, string e) {
+    post(string a, string b, string c, tag d, string e) {
         file_name = a;
         title = b;
         date = c;
@@ -20,14 +26,14 @@ class post {
     string get_file_name() { return file_name; }
     string get_title() { return title; }
     string get_date() { return date; }
-    string get_tags() { return tags; }
+    tag get_tags() { return tags; }
     string get_body() { return body; }
 
     private:
     string file_name = "";
     string title = "";
     string date = "";
-    string tags = "";
+    tag tags = 作文;
     string body = "";
 };
 
@@ -44,7 +50,11 @@ string txtformat_to_htmlformat(string s);
 string update_catalog(string s);
 void update_writting_catalog(string &s);
 void update_tech_catalog(string &s);
+void update_news_catalog(string &s);
 bool sort_recent(post a, post b);
+tag str_to_tag(string const &s);
+string tag_to_str(tag t);
+string which_folder(tag t);
 
 // グローバル変数
 vector<post> posts;
@@ -56,21 +66,14 @@ int main() {
     ios::sync_with_stdio(false);
 
     // フォルダーを巡って分析
-    for (auto& i : filesystem::directory_iterator("./original/writting")) {
-        if (i.is_regular_file()) {
-            ifstream f(i.path());
-            if (f.is_open()) {
-                analyze_file(f);
-                f.close();
-            }
-        }
-    }
-    for (auto& i : filesystem::directory_iterator("./original/tech")) {
-        if (i.is_regular_file()) {
-            ifstream f(i.path());
-            if (f.is_open()) {
-                analyze_file(f);
-                f.close();
+    for (auto& i : filesystem::directory_iterator("./original")) {
+        for (auto& j : filesystem::directory_iterator(i.path())) {
+            if (j.is_regular_file()) {
+                ifstream f(j.path());
+                if (f.is_open()) {
+                    analyze_file(f);
+                    f.close();
+                }
             }
         }
     }
@@ -88,19 +91,19 @@ int main() {
     tmp.close();
 
     // 毎回全体データ更新。既存データ削除
-    for (auto& i : filesystem::directory_iterator("./post/writting")) {
-        filesystem::remove(i.path());
+    for (auto& i : filesystem::directory_iterator("./post")) {
+        for (auto& j : filesystem::directory_iterator(i.path())) {
+            filesystem::remove(j.path());
+        }
     }
 
     // post/writting 新データ装入
     for (int i = 0; i < posts.size(); i++) {
         string new_post = create_post(posts[i], tmplt);
         string new_title;
-        if (posts[i].get_tags() == "作文") {
-            new_title = "./post/writting/" + posts[i].get_file_name() + ".html";
-        } else if (posts[i].get_tags() == "技術") {
-            new_title = "./post/tech/" + posts[i].get_file_name() + ".html";
-        }
+
+        new_title = "./post/" + which_folder(posts[i].get_tags()) + "/"
+            + posts[i].get_file_name() + ".html";
 
         ofstream f(new_title);
 
@@ -130,6 +133,7 @@ int main() {
         update.close();
     }
 
+    cout << "All done, clossing program.";
     exit(0);
 
 }
@@ -143,10 +147,13 @@ void analyze_file(ifstream const &f) {
     string file_name = find_file_name(str);
     string title = find_title(str);
     string date = find_date(str);
-    string tag = find_tag(str);
+
+    string t = find_tag(str);
+    tag new_tag = str_to_tag(t);
+
     string body = find_body(str);
 
-    post mypost = { file_name, title, date, tag, body };
+    post mypost = { file_name, title, date, new_tag, body };
     posts.push_back(mypost);
 }
 
@@ -162,7 +169,7 @@ string create_post(post &mypost, string tmplt) {
     date.insert(7, "-");
 
     tmplt.replace(tmplt.find("{{date}}"), 8, date);
-    tmplt.replace(tmplt.find("{{tags}}"), 8, mypost.get_tags());
+    tmplt.replace(tmplt.find("{{tags}}"), 8, tag_to_str(mypost.get_tags()));
 
     string body = txtformat_to_htmlformat(mypost.get_body());
     tmplt.replace(tmplt.find("{{body}}"), 8, body);
@@ -237,6 +244,7 @@ string txtformat_to_htmlformat(string s) {
 string update_catalog(string new_blog) {
     update_writting_catalog(new_blog);
     update_tech_catalog(new_blog);
+    update_news_catalog(new_blog);
     return new_blog;
 }
 
@@ -250,11 +258,11 @@ void update_writting_catalog(string &s) {
     // データ更新をブログに反映
     string writting_catalog;
     for (int i = 0; i < posts.size(); i++) {
-        if (posts[i].get_tags() == "作文") {
+        if (posts[i].get_tags() == 作文) {
             string title = posts[i].get_title();
             string file_name = posts[i].get_file_name();
             writting_catalog += "<li><a href=\"#\" onclick=\"load_post('";
-            writting_catalog +=  file_name + "', '" + posts[i].get_tags();
+            writting_catalog +=  file_name + "', '" + tag_to_str(posts[i].get_tags());
             writting_catalog += "')\">" + title;
             writting_catalog += "</a></li>\n";
         }
@@ -272,10 +280,10 @@ void update_tech_catalog(string &s) {
     // データ更新をブログに反映
     string tech_catalog;
     for (int i = 0; i < posts.size(); i++) {
-        if (posts[i].get_tags() == "技術") {
+        if (posts[i].get_tags() == 技術) {
             string title = posts[i].get_title();
             string file_name = posts[i].get_file_name();
-            string tag = posts[i].get_tags();
+            string tag = tag_to_str(posts[i].get_tags());
             tech_catalog += "<li><a href=\"#\" onclick=\"load_post('";
             tech_catalog +=  file_name + "', '" + tag;
             tech_catalog += "')\">" + title;
@@ -283,4 +291,52 @@ void update_tech_catalog(string &s) {
         }
     }
     s.insert(tech_idx_start, tech_catalog);
+}
+
+void update_news_catalog(string &s) {
+    int news_idx_start = s.find("<!--news_auto_add_start-->") + 26;
+    int news_idx_end = s.find("<!--news_auto_add_end-->");
+
+    // 既存データ削除
+    s.erase(news_idx_start, news_idx_end - news_idx_start);
+
+    // データ更新をブログに反映
+    string news_catalog;
+    for (int i = 0; i < posts.size(); i++) {
+        if (tag_to_str(posts[i].get_tags()) =="ニュース") {
+            string title = posts[i].get_title();
+            string file_name = posts[i].get_file_name();
+            string tag = tag_to_str(posts[i].get_tags());
+            news_catalog += "<li><a href=\"#\" onclick=\"load_post('";
+            news_catalog +=  file_name + "', '" + tag;
+            news_catalog += "')\">" + title;
+            news_catalog += "</a></li>\n";
+        }
+    }
+    s.insert(news_idx_start, news_catalog);
+}
+
+tag str_to_tag(string const &s) {
+    if (s == "作文") return 作文;
+    else if (s == "技術") return 技術;
+    else if (s == "ニュース") return ニュース;
+    else return 作文;
+}
+
+string tag_to_str(tag t) {
+    switch (t) {
+        case 作文:  return "作文";
+        case 技術:  return "技術";
+        case ニュース:  return "ニュース";
+        default:    return "作文";
+    }
+}
+
+string which_folder(tag t) {
+    switch (t) {
+        case 作文:  return "writting";
+        case 技術:  return "tech";
+        case ニュース:  return "news";
+        default:    return "writting";
+    }
 }

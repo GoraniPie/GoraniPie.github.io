@@ -190,7 +190,10 @@
   </style>
   <script>
     function load_post(filename, tag) {
-      const type = tag === "技術" ? "tech" : "writting";
+      var type = "";
+      if (tag == "技術") type = "tech";
+      else if (tag == "ニュース") type = "news"
+      else type = "writting";
 
       fetch(`./post/${type}/${filename}.html`)
         .then(res => res.text())
@@ -219,13 +222,13 @@
     <div class="main-wrapper">
       <nav>
         <ul>
-          <li><strong>日本語学習</strong>
+          <li><strong>日本語作文</strong>
             <ul style="margin-left: 0.5rem;">
               <div class="toggle-menu">
                 <input type="checkbox" id="作文-toggle" />
                 <label for="作文-toggle">・作文</label>
                 <ul>
-                  <!--writting_auto_add_start--><li><a href="#" onclick="load_post('[25_04_25]RedefinitionOfKAIZEN', '作文')">[25_04_25]「改善」の再定義</a></li>
+                  <!--writting_auto_add_start--><li><a href="#" onclick="load_post('[25_04_25]RedefinitionOfKAIZEN', '作文')">[25_04_25]改善の再定義</a></li>
 <!--writting_auto_add_end-->
                 </ul>
               </div>
@@ -237,7 +240,14 @@
 <!--tech_auto_add_end-->
                 </ul>
               </div>
-              <li><a href="#">・ニュース</a></li>
+              <div class="toggle-menu">
+                <input type="checkbox" id="ニュース-toggle" />
+                <label for="ニュース-toggle">・ニュース</label>
+                <ul>
+                  <!--news_auto_add_start--><li><a href="#" onclick="load_post('[25_05_01]EmploymentStatementOfKorea', 'ニュース')">[25_05_01]韓国の就活環境：IMF以降最低の求人倍率！？（ビジネス作文）</a></li>
+<!--news_auto_add_end-->
+                </ul>
+              </div>
             </ul>
           </li>
         </ul>
