@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[25_05_08]検索エンジン vs ブロガー：槍と盾の戦いは現在進行形（長文注意！）</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica", "Yu Gothic", sans-serif;
+      background-color: #f6f5f1;
+      color: #333;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    nav {
+      width: 200px;
+      padding: 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin-bottom: 1rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #444;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      color: #000;
+    }
+
+    .toggle-menu > input[type="checkbox"] {
+        display: none;
+    }
+
+    .toggle-menu > label {
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    }
+
+    .toggle-menu > ul {
+    display: none;
+    margin-left: 1rem;
+    border-left: 2px solid #ccc;
+    padding-left: 0.5rem;
+    }
+
+    .toggle-menu > input[type="checkbox"]:checked ~ ul {
+    display: block;
+    }
+
+    .toggle-menu ul li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    }
+
+    main {
+      flex-grow: 1;
+      background-color: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      border-radius: 8px;
+    }
+
+    article h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    article small {
+      display: block;
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+
+    article p {
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    pre {
+      font-family: 'Helvetica', 'Yu Gothic', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <main>
+      <article>
+        <h1>[25_05_08]検索エンジン vs ブロガー：槍と盾の戦いは現在進行形（長文注意！）</h1>
+        <small>2025-05-08 | 技術</small>
+
+        <p><br><br>皆さんも過去のネットで検索ワードと全然関係ない結果で不快だった経験、きっとあると思います。<br><br>例えば、「ケーキのレシピ」を入力したとき、本文に文脈と外れても「ケーキのレシピ」単語そのものが沢山含まれると<br><br>検索結果の上位に表れる現象が確かにありました。多分２０００年度の中では普通でした。<br><br>この時期は、韓国だったらNAVER、日本だったらYahooが各国の検索エンジンを独占していました。<br><br>結果に何の連関性も無いページが出る現象は当時の全検索エンジンの共通点でした。<br><br>しかし２０１０年の序盤、Googleは優れる検索エンジンとして有名になり、全世界におけて有名になりました。<br><br>韓国の場合この時期Naverの占有率が下がり、Googleがその分人気を得るようになりました。<br><br>当時、何が起こったんでしょうか。<br><br><br><br><br><br><br><h2>検索エンジンの基本的な流れ</h2><br><br>検索エンジンは基本的に下の流れを従います。<br><br>1. Botでネットのドキュメントを収集<br>2. インデックス：収集したドキュメントから核心の単語のリストを抽出<br>3. 逆インデックス：抽出された単語ごとに、それを含むドキュメントのリストを作成する<br>4. ユーザーの検索キーワードに当たるドキュメントを表示する<br><br>例えば、あるブログの投稿に「ケーキを作る方法は～」という内容があると、検索エンジンは<br><br>「ケーキ」「作る」「方法」などの意味を持つ単語を抽出します。<br><br>そして「ケーキ」を検索したら表示するリストにそのブログの投稿を入れます。<br><br>すると、ユーザーが「ケーキの作り方」を入力した時、<br><br>検索キーワードは「ケーキ」「作る」「方法」に分かれます。<br><br>この分かれたキーワードに全部載っているブログの投稿は検索内容と合致、結果に表示されます。<br><br>ですが、これには欠点があります。皆さんも予想されるでしょう。<br><br>キーワードを単純にいっぱい入れ込めば入れ込むほど検索結果の上位化されることです。<br><br><br><br><br><br><br><h2>２０１０年度序盤Googleの反撃</h2><br><br>Googleはこの問題点を認識し、いくつのアルゴリズムを導入しました。<br><br>体表的な例：<br><br>- 特定キーワードを使いすぎると減点<br>- ユーザーのページ接続時間を測定、ページからすぐ離脱すると減点<br>- ページ離脱の後、すぐ他のページに接続するか測定、ユーザーが以前のページの情報に満足したか判定<br>- ページの中でスクロールやクリックなどのインタラクションを測定、<br>  他の情報と合わせて行動シグナルとして判定<br><br>このようなアルゴリズムを導入した後、上のキーワードのスパムの欠点は無くなりました。<br><br>結果、良い検索エンジンとして名を連ね始めました。<br><br>ブロガーの槍はGoogleという盾によって阻止されましたが、戦いはまだ終わっていません。<br><br><br><br><br><br><br><h2>２０２３年、スパムブロガーの逆襲</h2><br><br>２０２３年は生成AIの登場と普及で、ChatGPTやHuggingFaceを活用した自動生成ブログが量産されました。<br><br>一人で数時間に数百個の投稿を載せたり、本当にありそうな文章でブログに投稿をするが、<br><br>中身は空っぽの情報に出来ていたりするスパムブログは新しい形として蘇てしまいました。<br><br>以前と違って、使用者がスパムか否かを判断することに時間がかかり、<br><br>多様な語彙が含まれて人間か否か判断ができなくなりますた。<br><br>今回の逆襲はかなり鋭かったようで、Googleも対策を作り出すのに数か月の時間がかかりました。<br><br>その数か月の間「最近Googleはいかれた」「Googleはもうダメだ」との反応で、<br><br>Googleのイメージは急に落ち込みました。<br><br><br><br><br><br><br><h2>２０２４年、遅かったが威力的な応手</h2><br><br>結果から言うとGoogleは強力な対策を構え、汚名返上を果たしました。その秘訣は何でしょうか。<br><br>Googleは今回の攻撃を防ぐ為にもっと複雑なアルゴリズムを導入しました。<br><br>代表的には：<br><br>- 独自のAIコンテンツ探知アルゴリズムを使用：AI生成による文書構造を探知：論理構造が完璧、感情無し、など<br>- 既存アルゴリズムの強化：Experience, Expertise, Authoritativeness, Trustworthinessの評価を追加<br>1. Experience：実際に存在する著者名が載っているか<br>2. Expertise：専門的なドメイン・サイトなのか<br>3. Authoritativeness：使用者経験を基づいたか<br>4. Trustworthiness：出所やレビューのように信頼できるか<br>- 機械的な生成を探知：１つのドメインで短時間に数百個の投稿がアプロードされたか？<br><br>この策を行った後、Googleの上位にAI生成ブログ顕著に減少し、戦場をひっくり返しました。<br><br>しかし、<br><br>平均的なブロガーがアプロードした投稿の方がChatGPTの論理構成・データ量・簡潔性の面でましなはずですが、<br><br>AI生成物だから接近ができなくなることが、本当に最善でしょうか。<br><br><br><br><br><br><br>今のスパムブロガーはGoogleのアルゴリズムを欺くため、AIに人間らしさを要求すべきになりました。<br><br>わざわざプロンプトにいくつの欠点を入れて人間のようなミスも再現しています。<br><br>考えてみれば、多くの人に読みやすく、数えられない量のデータの組み合わせの、AI生成物は実は使用者とって<br><br>ブロガーの情報より適切な情報を得ることができる手段かもしれません。<br><br>しかし、もしこのままAIの作成物がどんどん増え続ける、「死んだネット理論」が現実になる可能性も考えるべきです。<br><br>もしこのテーマに興味があれば、ぜに「SEO」と「死んだネット理論」について調べましょう！</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
