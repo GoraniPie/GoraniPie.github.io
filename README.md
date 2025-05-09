@@ -14,7 +14,7 @@
 - パーサーを実行するたびに、`./post`と`index.html`が全体更新**されます
 
 
-注意： `parser.cpp`は`C++17`以上のコンパイラが必須です。<br>
+注意： `parser.cpp`は`C++20`以上のコンパイラが必須です。<br>
 
 ---
 ## 使用方法
@@ -34,7 +34,7 @@
 ```
 2. 原文の**変更・追加・削除**の時、ターミナルで`parser.cpp`を起動します。コマンド：<br>
 ```
-g++ -std=c++17 -o parser parser.cpp
+g++ -std=c++20 -o parser parser.cpp
 ```
 
 
