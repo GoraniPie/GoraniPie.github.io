@@ -42,12 +42,13 @@ string find_title(string const &s);
 string find_date(string const &s);
 string find_tag(string const &s);
 string find_body(string const &s);
-string txtformat_to_htmlformat(string s);
+string txtformat_to_htmlformat(string s, string file_name);
 string erase_original_catalog(string new_blog);
 string update_catalog(string s);
 void update_writting_catalog(string &s);
 void update_tech_catalog(string &s);
 void update_news_catalog(string &s);
+bool sort_old(post a, post b);
 bool sort_recent(post a, post b);
 string which_folder(string const& tag);
 
@@ -171,7 +172,7 @@ string create_post(post &mypost, string tmplt) {
     tmplt.replace(tmplt.find("{{date}}"), 8, date);
     tmplt.replace(tmplt.find("{{tags}}"), 8, mypost.get_tags());
 
-    string body = txtformat_to_htmlformat(mypost.get_body());
+    string body = txtformat_to_htmlformat(mypost.get_body(), mypost.get_file_name());
     tmplt.replace(tmplt.find("{{body}}"), 8, body);
     
     return tmplt;
@@ -227,17 +228,52 @@ string find_body(string const &s) {
     return body;
 }
 
-bool sort_recent(post a, post b) {
+bool sort_old(post a, post b) {
     return stoi(a.get_date()) > stoi(b.get_date());
 }
 
-string txtformat_to_htmlformat(string s) {
+bool sort_recent(post a, post b) {
+    return stoi(a.get_date()) < stoi(b.get_date());
+}
+
+string txtformat_to_htmlformat(string s, string file_name) {
     // \n -> <br>
     size_t pos = 0;
-    while ((pos = s.find('\n', pos)) != std::string::npos) {
+    while ((pos = s.find('\n', pos)) != string::npos) {
         s.replace(pos, 1, "<br>");
         pos += 4;
     }
+
+    // {{img1}} -> <img src=....
+    int i = 0;
+    pos = 0;
+    string target_erase = "<img src";
+    while (1) {
+        pos = s.find(target_erase, pos);
+        if (pos != string::npos) {
+            int erase_to = s.find(">", pos);
+            s.erase(pos, erase_to - pos);
+        } else break;
+    }
+
+
+    i = 0;
+    pos = 0;
+    while (1) {
+        string target = "{{img" + to_string(i) + "}}";
+        string img = format("<img src=\"../../pic/{0}/{1}.jpg\" alt=\"image load failed\">", file_name, i);
+        if (s.find(target, pos) != string::npos) {
+            pos = s.find(target, pos);
+            cout << target << " -> " << img << "\n";
+            s.replace(pos, target.length(), img);
+        }
+        else {
+            break;
+        }
+
+        i++;
+    }
+
     return s;
 }
 
