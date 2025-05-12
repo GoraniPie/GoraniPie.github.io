@@ -127,7 +127,7 @@ int main() {
     tmp.close();
 
     // 最新投稿が最上段へ
-    sort(posts.begin(), posts.end(), sort_recent);
+    sort(posts.begin(), posts.end(), sort_old);
 
     new_blog = update_catalog(new_blog);
 
@@ -250,11 +250,11 @@ string find_body(string const &s) {
 }
 
 bool sort_old(post a, post b) {
-    return stoi(a.get_date()) > stoi(b.get_date());
+    return stoi(a.get_date()) < stoi(b.get_date());
 }
 
 bool sort_recent(post a, post b) {
-    return stoi(a.get_date()) < stoi(b.get_date());
+    return stoi(a.get_date()) > stoi(b.get_date());
 }
 
 string txtformat_to_htmlformat(string s, string file_name) {
@@ -347,15 +347,17 @@ string update_recent_calaog(string new_blog) {
     int idx_end = new_blog.find(end_txt);
     new_blog.erase(idx_start, idx_end - idx_start);
 
-
+    int idx_reverse = posts_size - 1;
     for (int i = 0; i < max_idx; i++) {
         catalog += format("<a href=\"#\" onclick=\"load_post('{0}', '{1}')\">{2}</a>\n<br>\n",
-            posts[i].get_file_name(),
-            which_folder(posts[i].get_tags()),
-            posts[i].get_title()
+            posts[idx_reverse].get_file_name(),
+            which_folder(posts[idx_reverse].get_tags()),
+            posts[idx_reverse].get_title()
         );
         new_blog.insert(idx_start, catalog);
+        idx_start += catalog.length();
         catalog = "";
+        idx_reverse--;
     }
     return new_blog;
 }
