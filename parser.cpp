@@ -52,6 +52,7 @@ void update_news_catalog(string &s);
 bool sort_old(post a, post b);
 bool sort_recent(post a, post b);
 string which_folder(string const& tag);
+void generate_sitemap();
 
 // グローバル変数
 vector<post> posts;
@@ -136,10 +137,29 @@ int main() {
         update.close();
     }
 
+    generate_sitemap();
+
     cout << "All done, clossing program.";
     exit(0);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void analyze_file(ifstream const &f) {
     string str = "";
@@ -345,4 +365,38 @@ string which_folder(string const& tag) {
         if (tags_list[i].first == tag) return tags_list[i].second;
     }
     return "writting";
+}
+
+void generate_sitemap() {
+    ofstream sitemap("sitemap.xml", ios::trunc);
+    if (!sitemap.is_open()) {
+        return;
+    }
+
+    sitemap << "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    sitemap << "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+
+    sitemap << "<url>\n";
+    sitemap << "<loc>https://goranipie.github.io/</loc>\n";
+    sitemap << "</url>\n";
+
+    for (auto p : posts) {
+        string url = format("https://goranipie.github.io/post/{0}/{1}.html",
+            which_folder(p.get_tags()),
+            p.get_file_name()
+        );
+
+        string date = p.get_date();  // YYYYMMDD
+        date.insert(4, "-");
+        date.insert(7, "-");  // YYYY-MM-DD
+
+        sitemap << "<url>\n";
+        sitemap << "<loc>" << url << "</loc>\n";
+        sitemap << "<lastmod>" << date << "</lastmod>\n";
+        sitemap << "</url>\n";
+    }
+
+    sitemap << "</urlset>\n";
+    sitemap.close();
+
 }
