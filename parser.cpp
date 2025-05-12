@@ -45,6 +45,7 @@ string find_body(string const &s);
 string txtformat_to_htmlformat(string s, string file_name);
 string erase_original_catalog(string new_blog);
 string update_catalog(string s);
+string update_recent_calaog(string new_blog);
 void update_writting_catalog(string &s);
 void update_tech_catalog(string &s);
 void update_news_catalog(string &s);
@@ -311,6 +312,30 @@ string update_catalog(string new_blog) {
         writting_catalog += "</a></li>\n";
 
         new_blog.insert(writting_idx_start, writting_catalog);
+    }
+    new_blog = update_recent_calaog(new_blog);
+    return new_blog;
+}
+
+string update_recent_calaog(string new_blog) {
+    int posts_size = posts.size();
+    const int max_idx = min(3, posts_size);
+    string start_txt = "<!--recent_post_start-->";
+    string end_txt = "<!--recent_post_end-->";
+    string catalog = "";
+    int idx_start = new_blog.find(start_txt) + start_txt.length();
+    int idx_end = new_blog.find(end_txt);
+    new_blog.erase(idx_start, idx_end - idx_start);
+
+
+    for (int i = 0; i < max_idx; i++) {
+        catalog += format("<a href=\"#\" onclick=\"load_post('{0}', '{1}')\">{2}</a>\n<br>\n",
+            posts[i].get_file_name(),
+            which_folder(posts[i].get_tags()),
+            posts[i].get_title()
+        );
+        new_blog.insert(idx_start, catalog);
+        catalog = "";
     }
     return new_blog;
 }
