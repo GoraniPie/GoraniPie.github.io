@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+sitemap: https://goranipie.github.io/sitemap.xml
