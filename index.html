@@ -199,7 +199,7 @@
     function load_post(filename, tag) {
       var type = tag;
 
-      fetch(`./post/${type}/${filename}.html`)
+      fetch(`https://goranipie.github.io/post/${type}/${filename}.html`)
         .then(res => res.text())
         .then(data => {
           document.getElementById("post_content").innerHTML = data;
