@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[25_10_19]Zero-Trustの重要性：カカオトークの事例から学ぶ「クライアント信頼」の危険性</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Helvetica", "Yu Gothic", sans-serif;
+      background-color: #f6f5f1;
+      color: #333;
+    }
+
+    header {
+      background-color: #fff;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    nav {
+      width: 200px;
+      padding: 1rem;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin-bottom: 1rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #444;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      color: #000;
+    }
+
+    .toggle-menu > input[type="checkbox"] {
+        display: none;
+    }
+
+    .toggle-menu > label {
+    cursor: pointer;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    }
+
+    .toggle-menu > ul {
+    display: none;
+    margin-left: 1rem;
+    border-left: 2px solid #ccc;
+    padding-left: 0.5rem;
+    }
+
+    .toggle-menu > input[type="checkbox"]:checked ~ ul {
+    display: block;
+    }
+
+    .toggle-menu ul li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    }
+
+    main {
+      flex-grow: 1;
+      background-color: #ffffff;
+      padding: 2rem;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      border-radius: 8px;
+    }
+
+    article h1 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    article small {
+      display: block;
+      margin-bottom: 1.5rem;
+      color: #666;
+    }
+
+    article p {
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+    }
+
+    article p img {
+      display: block;
+      max-width: 80%;
+      margin: auto;
+    }
+
+    pre {
+      font-family: 'Helvetica', 'Yu Gothic', sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <main>
+      <article>
+        <h1>[25_10_19]Zero-Trustの重要性：カカオトークの事例から学ぶ「クライアント信頼」の危険性</h1>
+        <small>2025-10-19 | 技術</small>
+
+        <p><br><h4>本記事はネット上に公開されて知られているセキュリティ欠陥の例をもとにしたセキュリティの<br>教育・研究目的の分析であり、違法行為を助長する意図はありません。<br>プロダクトの許可されていない偽造・改変などは法律違反の可能性があり、その責任は全て行為者にあります。<br>もし問題のある記載があればご連絡ください。速やかに対応します。</h4><br><br>韓国で不動の1位を誇るメッセンジャーアプリ、カカオトークが先日のアップデートで批判が殺到しています。<br><br>以前と比べて全く違うUI/UXの変化に不満を持つ人が増えた結果、<br><br>Google Playストアの評価は5.0点満点中1.0点を記録しました。<br><br>しかし、これを元に戻す非公式な方法が登場しました。<br><br><br><br>韓国語記事：https://www.imaeil.com/page/view/2025101712350828442<br><br><br><br>記事によると、ある開発者がカカオトークのRevanced Patchとそのソースコードを開発し<br><br>コミュニティーで共有したとのことです。<br><br>パッチを適用したアプリの主な機能は<br><br>友達タブのUI復元、ショート動画タブの削除、そして「怪しげな」機能「スタンプPlus強制適用」などです。<br><br>スタンプPlusは定額料金で有料スタンプが使い放題になるサービスです。<br><br>有料サービスがクライアントの操作のみで使えるようになるという事実は<br><br>サーバーサイドの重大なセキュリティ脆弱性を示しています。<br><br><br><br><br><br><br>例えば、悪意を持ったあるハッカーがクライアント側でJavascriptを弄って<br><br>自身のプロフィールの所持金が１０００億円だというデータを送信します。<br><br>サーバー側は基本的にこのハッカーが送った１０００億円という情報を信頼してはいけません。<br><br>サーバーはハッカーが送った１０００億円というデータは無視して<br><br>サーバーのデータベースに記録されている所持金のみを確認します。<br><br>クライアントは絶対に信頼してはならない、これがZero-Trustの基本的な原則です。<br><br>もしこのようなサーバー側検証が整っていなかったら、ハッカーは1秒で億万長者になれるでしょう。<br><br>従って、クライアントのロジックでは絶対に起こらないシナリオだと言っても<br><br>クライアントから受けるデータは常に操作の可能性がある、と見なすべきです。<br><br>スタンプPlusの強制適用機能はクライアントを信頼したことで成立する脆弱性攻撃の一環です。<br><br><br><br><br><br><br>スタンプ Plus強制適用パッチの核心のコードはこちらです。<br><br><img src="../../pic/[25_10_19]ImportanceOfZeroTrust_ClientTrustOfKakaotalk/0.jpg" alt="image load failed"><br><br><img src="../../pic/[25_10_19]ImportanceOfZeroTrust_ClientTrustOfKakaotalk/1.jpg" alt="image load failed"><br><br>アンドロイドのアプリはKotlinのコードがバイトコード(DEX)に変換されてAPKにビルドされます。<br><br>その後ランタイムのときバイトコードはJVMによって機械語に変換されます。<br><br>まだ完全な機械語に翻訳されていないため、このDEXはdexlib2とを通じていじることができます。<br><br>このパッチはクライアント側の仮称isスタンプPlusActivated()のような役割のメソッドを検知します。<br><br>そのメソッドのパターンは開発者が設定した条件、つまりfingerprintによって検知されます。<br><br><img src="../../pic/[25_10_19]ImportanceOfZeroTrust_ClientTrustOfKakaotalk/0.jpg" alt="image load failed"><br><br>これが検索条件です。<br><br>アクセス指定子、リターンタイプ、DEXの命令パターン、ソースファイルなどを条件として<br><br>仮称isスタンプPlusActivated()メソッドを指定します。<br><br>その後<br><br><img src="../../pic/[25_10_19]ImportanceOfZeroTrust_ClientTrustOfKakaotalk/1.jpg" alt="image load failed"><br><br>.method.addInstructions()を使って仮称isスタンプPlusActivated()のメソッドの最上段に<br><br>return true<br><br>を挿入します。<br><br>そうするとアプリの動作中ユーザーがスタンプPlusを購入したかを確認する際に<br><br>購入したか否かは関係なくいつも「そうです」という答えになってしまいます。<br><br>カカオトークのサーバー側はこれについて「分かりました、有料サービスを提供します」<br><br>ということになるのです。<br><br><br><br><br><br><br>サーバー側は「そうですか？もう一度購入履歴を確認してみますね」のように再検証を行うべきです。<br><br>これがクライアントのいうことは必ず疑うZero-Trustの原則です。<br><br>カスタム改造アプリで署名や完全性検査を迂回しても、異常な使用パターンはログから検出されます。<br><br>サーバー側としては購入履歴のないユーザーの有料サービス使用、特定APIへのアクセス頻度のようなパターンで<br><br>攻撃の状況や原因を探すことができます。</p>
+      </article>
+    </main>
+  </div>
+</body>
+</html>
