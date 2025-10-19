@@ -269,29 +269,25 @@ string txtformat_to_htmlformat(string s, string file_name) {
     int i = 0;
     pos = 0;
     string target_erase = "<img src";
-    while (1) {
-        pos = s.find(target_erase, pos);
-        if (pos != string::npos) {
-            int erase_to = s.find(">", pos);
-            s.erase(pos, erase_to - pos);
-        } else break;
+    while (pos = s.find(target_erase, pos) != string::npos) {
+        int erase_to = s.find(">", pos);
+        s.erase(pos, erase_to - pos);
     }
 
 
     i = 0;
     pos = 0;
     while (1) {
+        pos = 0;
         string target = "{{img" + to_string(i) + "}}";
+        if ((pos = s.find(target, pos)) == string::npos) break;
+
         string img = format("<img src=\"../../pic/{0}/{1}.jpg\" alt=\"image load failed\">", file_name, i);
-        if (s.find(target, pos) != string::npos) {
-            pos = s.find(target, pos);
+        while ((pos = s.find(target, pos)) != string::npos) {
             cout << target << " -> " << img << "\n";
             s.replace(pos, target.length(), img);
+            cout << format("pos : {0} imglen : {1}\n", pos, img.length());
         }
-        else {
-            break;
-        }
-
         i++;
     }
 
